@@ -988,4 +988,22 @@ mod tests {
         // check that [`Builder::parse_lossy`] is behaving correctly as well.
         assert!(EnvFilter::builder().parse("").is_ok());
     }
+
+    #[test]
+    fn spaces_in_filter() {
+        let filter = EnvFilter::new("info , app=debug").with_collector(NoCollector);
+        static META: &Metadata<'static> = &Metadata::new(
+            "mySpan",
+            "app",
+            Level::DEBUG,
+            None,
+            None,
+            None,
+            FieldSet::new(&[], identify_callsite!(&Cs)),
+            Kind::SPAN,
+        );
+
+        let interest = filter.register_callsite(META);
+        assert!(interest.is_always());
+    }
 }

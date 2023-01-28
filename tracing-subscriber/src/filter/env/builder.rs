@@ -137,6 +137,7 @@ impl Builder {
         let directives = dirs
             .as_ref()
             .split(',')
+            .map(|s| s.trim())
             .filter(|s| !s.is_empty())
             .filter_map(|s| match Directive::parse(s, self.regex) {
                 Ok(d) => Some(d),
@@ -157,6 +158,7 @@ impl Builder {
         }
         let directives = dirs
             .split(',')
+            .map(|s| s.trim())
             .filter(|s| !s.is_empty())
             .map(|s| Directive::parse(s, self.regex))
             .collect::<Result<Vec<_>, _>>()?;
